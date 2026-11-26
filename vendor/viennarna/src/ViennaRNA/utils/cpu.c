@@ -8,6 +8,8 @@
 #include "config.h"
 #endif
 
+#include <stdint.h>
+
 #include "ViennaRNA/utils/basic.h"
 #include "ViennaRNA/utils/cpu.h"
 

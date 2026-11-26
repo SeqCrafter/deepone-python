@@ -36,3 +36,8 @@ without them. Cephes const.c retains only MACHEP, MAXLOG, MAXNUM and PI. G-quadr
 sparse-matrix cleanup is removed because those matrices are never allocated by
 this fixed-default implementation. A clean linked-extension import and independent
 reference comparisons verify these dependencies, in addition to syntax checks.
+
+Portability correction: utils/cpu.c explicitly includes <stdint.h> for uint32_t.
+This system header is required on Linux/glibc and must not be pruned based on
+transitive type declarations in macOS headers. The fixed source subset is also
+checked with Linux x86_64/glibc 2.28 target headers.
