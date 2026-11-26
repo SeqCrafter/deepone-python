@@ -1,7 +1,5 @@
 """Public scoring interface."""
 
-from typing import cast
-
 import numpy as np
 import pandas as pd
 
@@ -71,10 +69,11 @@ def score_grnas(
             raise ValueError(f"sequence {index} contains non-ACGT characters")
         guides.extend(_find_guides(normalized, f"sequence_{index}"))
     if not guides:
-        return cast(pd.DataFrame, pd.DataFrame({
+        empty: pd.DataFrame = pd.DataFrame({
             name: pd.Series(dtype="float64" if name == "deepone_score" else "object")
             for name in _COLUMNS
-        }))
+        })
+        return empty
     resolved = _resolve_device(device)
     encoded = _encode([guide.context for guide in guides])
     energies = np.array([[_energy(g.grna_seq)] for g in guides], dtype=np.float32)
@@ -84,4 +83,5 @@ def score_grnas(
         for guide, score in zip(guides, predictions, strict=True):
             rows.append((guide.sequence_id, guide.sequence, guide.grna_id, guide.grna_seq,
                          cell_line, float(score)))
-    return cast(pd.DataFrame, pd.DataFrame(rows, columns=_COLUMNS))
+    scores: pd.DataFrame = pd.DataFrame(rows, columns=_COLUMNS)
+    return scores
