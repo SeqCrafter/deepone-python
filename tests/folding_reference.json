@@ -1,0 +1,37 @@
+{
+  "version": "RNAfold 2.7.2",
+  "source": "bioconda/osx-arm64/viennarna-2.7.2-py311pl5321h7966de9_0.conda",
+  "command": "RNAfold --noPS",
+  "cases": [
+    {
+      "sequence": "AAAAAAAAAAAAAAAAAAAA",
+      "stdout": "AAAAAAAAAAAAAAAAAAAA\n.................... (  0.00)\n",
+      "energy": 0.0
+    },
+    {
+      "sequence": "GGGAAACCC",
+      "stdout": "GGGAAACCC\n(((...))) ( -1.20)\n",
+      "energy": -1.2
+    },
+    {
+      "sequence": "GCGCUUCGCG",
+      "stdout": "GCGCUUCGCG\n(((...))). ( -2.10)\n",
+      "energy": -2.1
+    },
+    {
+      "sequence": "GCGCGCGCGCGCGCGCGCGC",
+      "stdout": "GCGCGCGCGCGCGCGCGCGC\n((((((((....)))))))) (-16.70)\n",
+      "energy": -16.7
+    },
+    {
+      "sequence": "ATGCTAGCTAGCTAGCATGC",
+      "stdout": "AUGCUAGCUAGCUAGCAUGC\n(((((((....))))))).. ( -7.80)\n",
+      "energy": -7.8
+    },
+    {
+      "sequence": "TTATCTTCGCTATCACCTCC",
+      "stdout": "UUAUCUUCGCUAUCACCUCC\n.................... (  0.00)\n",
+      "energy": 0.0
+    }
+  ]
+}

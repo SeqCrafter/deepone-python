@@ -1,0 +1,12 @@
+name: Manylinux wheels
+on: [workflow_dispatch]
+jobs:
+  manylinux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pypa/cibuildwheel@v3.2
+      - uses: actions/upload-artifact@v4
+        with:
+          name: manylinux-wheels
+          path: wheelhouse/*.whl

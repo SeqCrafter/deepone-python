@@ -1,0 +1,5 @@
+include IMPLEMENTATION_NOTES.md
+recursive-include vendor/viennarna *
+recursive-include src/DeepOneCalculator *.pyx *.pyi *.json *.h5 py.typed
+recursive-include tests *.py *.json *.c
+exclude src/DeepOneCalculator/_viennarna.c

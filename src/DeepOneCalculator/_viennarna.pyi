@@ -1,0 +1,3 @@
+def fold_energy(sequence: str) -> float:
+    """Return the RNA minimum free energy in kcal/mol."""
+    ...

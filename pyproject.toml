@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=77", "wheel", "cython>=3.0", "numpy>=1.26"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "DeepOneCalculator"
+version = "0.1.0"
+description = "Pretrained DeepOne predictions of SpCas9 templated +1 bp insertions"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "GPL-3.0-only"
+license-files = ["LICENSE", "vendor/viennarna/COPYING"]
+dependencies = ["numpy>=1.26", "pandas>=2.1", "tensorflow>=2.16,<2.22", "h5py>=3.10"]
+
+[project.optional-dependencies]
+cuda = ["tensorflow[and-cuda]>=2.16,<2.22"]
+dev = ["pytest>=8", "ruff>=0.9", "mypy>=1.14", "pandas-stubs", "build"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+DeepOneCalculator = ["models/*.h5", "models/manifest.json", "*.json", "py.typed", "*.pyi"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["integration: real pretrained model inference", "cli: reference RNAfold comparison"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+include = ["src/**/*.py", "tests/**/*.py", "setup.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.10"
+files = ["src/DeepOneCalculator"]
+strict = true
+
+[[tool.mypy.overrides]]
+module = ["tensorflow.*", "h5py.*"]
+ignore_missing_imports = true
+
+[tool.cibuildwheel]
+build = "cp310-manylinux_x86_64 cp311-manylinux_x86_64 cp312-manylinux_x86_64"
+manylinux-x86_64-image = "manylinux_2_28"
+test-requires = ["pytest"]
+test-command = "pytest {project}/tests"
+environment = { OMP_NUM_THREADS = "1", TF_NUM_INTRAOP_THREADS = "1", TF_NUM_INTEROP_THREADS = "1" }
