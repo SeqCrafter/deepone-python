@@ -10,3 +10,4 @@ dist/
 .ruff_cache/
 src/DeepOneCalculator/_viennarna.c
 .DS_Store
+DeepOne_model/

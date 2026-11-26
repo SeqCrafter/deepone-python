@@ -108,5 +108,49 @@
       "file": "RPE-1__est_model_5_2.h5",
       "sha256": "5a161cb1f90d3545e24be8a2d0292a958888ed37966b85a4768ced25505f6d46"
     }
+  ],
+  "SpCas9-NG": [
+    {
+      "file": "SpCas9-NG__est_model_0_0.h5",
+      "sha256": "3363a18c73cb40385e28ed58b238f95d01236352cde11b14722dffd698b0a14e"
+    },
+    {
+      "file": "SpCas9-NG__est_model_1_0.h5",
+      "sha256": "18c2ea0f549d9a348ec72a712393dae2679a962ce7c274c3940a04a33ee77ebd"
+    },
+    {
+      "file": "SpCas9-NG__est_model_2_1.h5",
+      "sha256": "2734973c036dd5162a9b1f2315ac6e6adfbed662519080b46c0e05f751d1ad9a"
+    },
+    {
+      "file": "SpCas9-NG__est_model_3_1.h5",
+      "sha256": "bc766aa297fe143ed7887ec6fe21f2cca6a87b981188125d4b4ee1afce88bc1b"
+    },
+    {
+      "file": "SpCas9-NG__est_model_4_0.h5",
+      "sha256": "0a0cfc030d6c471006949c9b7c4c550b25978e1ebe279c93405f92799f90fde3"
+    }
+  ],
+  "SpG": [
+    {
+      "file": "SpG__est_model_0_1.h5",
+      "sha256": "12f7feffdb6dd2ed7f2cb10d7d5dd768c349e39a9f62fd6142ece66e1a1cef4d"
+    },
+    {
+      "file": "SpG__est_model_1_1.h5",
+      "sha256": "ce725ab84234e47317ca46ac8b85d6c9f05f1c5b4b4bd31b4a52fc9f39bd11ef"
+    },
+    {
+      "file": "SpG__est_model_2_0.h5",
+      "sha256": "452742582e484dfb24ab626f454aa6ff3159277096ed7f014245847ec8bb5106"
+    },
+    {
+      "file": "SpG__est_model_3_1.h5",
+      "sha256": "1bd68a6c1e7307eb19ccc6b91a71d9bd7bb2aa07c513ed75ab294164e6f52b6f"
+    },
+    {
+      "file": "SpG__est_model_4_0.h5",
+      "sha256": "191be393ab52fb1155a7c0e1d5cc64ac0d6723f422d817a41351149b009d9c24"
+    }
   ]
 }

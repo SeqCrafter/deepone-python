@@ -16,7 +16,8 @@ TARGETS = ["AAAA" + "ATATATATATATATATATAT" + "AGG" + "AAA",
 
 
 def test_packaged_weights() -> None:
-    for cell_line in SUPPORTED_CELL_LINES:
+    assert set(_manifest()) == {*SUPPORTED_CELL_LINES, "SpCas9-NG", "SpG"}
+    for cell_line in _manifest():
         assert len(_manifest()[cell_line]) == 5
         for entry in _manifest()[cell_line]:
             resource = files("DeepOneCalculator").joinpath("models").joinpath(entry["file"])

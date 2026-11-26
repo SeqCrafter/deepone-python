@@ -57,11 +57,11 @@ def _build_model() -> Any:
 
 def _predict(
     encoded: NDArray[np.float32], energies: NDArray[np.float32],
-    cell_line: str, device: str, batch_size: int,
+    model_key: str, device: str, batch_size: int,
 ) -> NDArray[np.float64]:
     import tensorflow as tf
 
-    weights = _manifest()[cell_line]
+    weights = _manifest()[model_key]
     predictions = np.zeros(len(encoded), dtype=np.float64)
     with tf.device(device), ExitStack() as stack:
         model = _build_model()

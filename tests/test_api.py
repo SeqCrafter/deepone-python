@@ -20,7 +20,8 @@ def test_shapes(sequences: str | list[str], cells: str | list[str]) -> None:
         frame = score_grnas(sequences, cells, batch_size=1)
     assert len(frame) == count * ncell
     assert list(frame.columns) == ["sequence_id", "sequence", "gRNA_id", "gRNA_seq",
-                                   "cell_line", "deepone_score"]
+                                   "cell_line", "cas9_type", "deepone_score"]
+    assert frame.cas9_type.eq("SpCas9").all()
     assert frame.gRNA_seq.eq(TARGET[4:27]).all()
     assert frame.sequence.eq(TARGET).all()
     assert frame.gRNA_id.nunique() == count
@@ -57,7 +58,7 @@ def test_empty_and_no_pam() -> None:
     for sequences in ([], "A" * 30):
         result = score_grnas(sequences)
         assert result.empty
-        assert len(result.columns) == 6
+        assert len(result.columns) == 7
         assert result.deepone_score.dtype == np.float64
 
 

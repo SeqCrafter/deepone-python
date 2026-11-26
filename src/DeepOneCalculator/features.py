@@ -24,6 +24,14 @@ _DNA_NN = dict(zip(
     (-1., -1., -.88, -.58, -1.45, -1.45, -1.44, -1.44, -1.28, -1.28, -1.30,
      -1.30, -2.17, -2.24, -1.84, -1.84), strict=True,
 ))
+# Effective values from upstream Energy_cal.py after resolving duplicate keys.
+_PAM_RATIOS = {
+    "AGA": 1.0, "AGC": 0.8, "AGG": 1.0, "AGT": 1.2,
+    "CGA": 1.0, "CGC": 0.9, "CGG": 1.0, "CGT": 1.1,
+    "GGA": 1.1, "GGC": 0.9, "GGG": 1.1, "GGT": 1.2,
+    "TGA": 0.9, "TGC": 0.8, "TGG": 1.0, "TGT": 1.1,
+    "AAG": 0.9, "CAG": 0.9, "GAG": 0.9, "TAG": 0.9,
+}
 
 
 @dataclass(frozen=True, slots=True)
@@ -38,12 +46,12 @@ class _Guide:
         return self.context[4:27]
 
 
-def _find_guides(sequence: str, sequence_id: str) -> list[_Guide]:
+def _find_guides(sequence: str, sequence_id: str, *, allow_ngn: bool = False) -> list[_Guide]:
     guides = []
     for strand, oriented in (("p", sequence), ("m", sequence.translate(_COMPLEMENT)[::-1])):
         for start in range(len(oriented) - 29):
             context = oriented[start:start + 30]
-            if context[25:27] == "GG":
+            if context[25] == "G" and (allow_ngn or context[26] == "G"):
                 guides.append(_Guide(sequence_id, sequence, f"{sequence_id}_{strand}{start + 1}",
                                      context))
     return guides
@@ -70,7 +78,7 @@ def _energy(guide: str) -> float:
             contribution += 0.25
         hybrid += contribution * _POSITION_WEIGHTS[i]
         opening += _DNA_NN[pair]
-    pam_ratio = 1.1 if guide[-3:] == "GGG" else 1.0
+    pam_ratio = _PAM_RATIOS.get(guide[-3:], 0.0)
     return (-hybrid + fold_energy(spacer) + opening) * pam_ratio
 
 

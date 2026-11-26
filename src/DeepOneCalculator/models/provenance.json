@@ -1,0 +1,94 @@
+{
+  "repository": "SeqCrafter/DeepOne_model",
+  "commit": "a161b522b3e3cd838aec6f3f4df176154e0a8ec4",
+  "weights": [
+    {
+      "path": "utils/bestmodel_DeepOne/variants/ng/est_model_0_0.h5",
+      "local_file": "ng__est_model_0_0.h5",
+      "sha256": "3363a18c73cb40385e28ed58b238f95d01236352cde11b14722dffd698b0a14e",
+      "git_blob_sha": "c183b0158bc7208a37e73f0f7d56d2eb661c7f8c",
+      "bytes": 1016272,
+      "packaged_file": "SpCas9-NG__est_model_0_0.h5"
+    },
+    {
+      "path": "utils/bestmodel_DeepOne/variants/ng/est_model_1_0.h5",
+      "local_file": "ng__est_model_1_0.h5",
+      "sha256": "18c2ea0f549d9a348ec72a712393dae2679a962ce7c274c3940a04a33ee77ebd",
+      "git_blob_sha": "eaf72f8946cb6d9076fa482f8562b89518aa1c72",
+      "bytes": 1016272,
+      "packaged_file": "SpCas9-NG__est_model_1_0.h5"
+    },
+    {
+      "path": "utils/bestmodel_DeepOne/variants/ng/est_model_2_1.h5",
+      "local_file": "ng__est_model_2_1.h5",
+      "sha256": "2734973c036dd5162a9b1f2315ac6e6adfbed662519080b46c0e05f751d1ad9a",
+      "git_blob_sha": "699a37176d21f9ccee61a37ee493df7a4b829e69",
+      "bytes": 1016272,
+      "packaged_file": "SpCas9-NG__est_model_2_1.h5"
+    },
+    {
+      "path": "utils/bestmodel_DeepOne/variants/ng/est_model_3_1.h5",
+      "local_file": "ng__est_model_3_1.h5",
+      "sha256": "bc766aa297fe143ed7887ec6fe21f2cca6a87b981188125d4b4ee1afce88bc1b",
+      "git_blob_sha": "0994759c8adbf3e2b3118cb7bad98da285414f45",
+      "bytes": 1016272,
+      "packaged_file": "SpCas9-NG__est_model_3_1.h5"
+    },
+    {
+      "path": "utils/bestmodel_DeepOne/variants/ng/est_model_4_0.h5",
+      "local_file": "ng__est_model_4_0.h5",
+      "sha256": "0a0cfc030d6c471006949c9b7c4c550b25978e1ebe279c93405f92799f90fde3",
+      "git_blob_sha": "eb2ef6b2868d28b2c61d30ce2f2214c9e07dc8e3",
+      "bytes": 1016272,
+      "packaged_file": "SpCas9-NG__est_model_4_0.h5"
+    },
+    {
+      "path": "utils/bestmodel_DeepOne/variants/spg/est_model_0_1.h5",
+      "local_file": "spg__est_model_0_1.h5",
+      "sha256": "12f7feffdb6dd2ed7f2cb10d7d5dd768c349e39a9f62fd6142ece66e1a1cef4d",
+      "git_blob_sha": "237866e8f54db70aa251ede069d20645cb3a5278",
+      "bytes": 1016272,
+      "packaged_file": "SpG__est_model_0_1.h5"
+    },
+    {
+      "path": "utils/bestmodel_DeepOne/variants/spg/est_model_1_1.h5",
+      "local_file": "spg__est_model_1_1.h5",
+      "sha256": "ce725ab84234e47317ca46ac8b85d6c9f05f1c5b4b4bd31b4a52fc9f39bd11ef",
+      "git_blob_sha": "c63c585c835b8dee9ea5626dcb4fcd3660fe1cf5",
+      "bytes": 1016272,
+      "packaged_file": "SpG__est_model_1_1.h5"
+    },
+    {
+      "path": "utils/bestmodel_DeepOne/variants/spg/est_model_2_0.h5",
+      "local_file": "spg__est_model_2_0.h5",
+      "sha256": "452742582e484dfb24ab626f454aa6ff3159277096ed7f014245847ec8bb5106",
+      "git_blob_sha": "3566e2bf1100146743311f61b1ba4179451a1bf4",
+      "bytes": 1016272,
+      "packaged_file": "SpG__est_model_2_0.h5"
+    },
+    {
+      "path": "utils/bestmodel_DeepOne/variants/spg/est_model_3_1.h5",
+      "local_file": "spg__est_model_3_1.h5",
+      "sha256": "1bd68a6c1e7307eb19ccc6b91a71d9bd7bb2aa07c513ed75ab294164e6f52b6f",
+      "git_blob_sha": "6b53771ac279a18f1777661cef109c97ae0eab7e",
+      "bytes": 1016272,
+      "packaged_file": "SpG__est_model_3_1.h5"
+    },
+    {
+      "path": "utils/bestmodel_DeepOne/variants/spg/est_model_4_0.h5",
+      "local_file": "spg__est_model_4_0.h5",
+      "sha256": "191be393ab52fb1155a7c0e1d5cc64ac0d6723f422d817a41351149b009d9c24",
+      "git_blob_sha": "cd759e1c48416542c6390b359fb38185c7b0be68",
+      "bytes": 1016272,
+      "packaged_file": "SpG__est_model_4_0.h5"
+    }
+  ],
+  "variant_model_scope": {
+    "SpCas9-NG": {
+      "cell_line_specific": false
+    },
+    "SpG": {
+      "cell_line_specific": false
+    }
+  }
+}

@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "DeepOneCalculator"
-version = "0.1.0"
-description = "Pretrained DeepOne predictions of SpCas9 templated +1 bp insertions"
+version = "0.2.0"
+description = "Pretrained DeepOne SpCas9, SpCas9-NG and SpG insertion predictions"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "GPL-3.0-only"
@@ -20,7 +20,7 @@ dev = ["pytest>=8", "ruff>=0.9", "mypy>=1.14", "pandas-stubs", "build"]
 where = ["src"]
 
 [tool.setuptools.package-data]
-DeepOneCalculator = ["models/*.h5", "models/manifest.json", "*.json", "py.typed", "*.pyi"]
+DeepOneCalculator = ["models/*.h5", "models/*.json", "*.json", "py.typed", "*.pyi"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
