@@ -7,24 +7,16 @@ scale and are neither clipped nor converted to percentages.
 
 ## Install
 
-```bash
-pip install DeepOneCalculator
-```
-
-This command applies once a release has been published to your package index.
-For this standalone source checkout (Python 3.10 or newer):
-
+For no GPU device :
 ```bash
 python -m pip install .
-# Build a distributable wheel, including the H5 models:
-pip wheel . -w dist/
 ```
 
-Source builds need a C compiler and Python development headers. Build isolation
-installs Cython, NumPy and setuptools automatically. Binary wheels require no C
-compiler. Neither installation nor inference requires a system ViennaRNA library,
-the ViennaRNA Python package, or an `RNAfold` executable. The private Cython
-extension statically includes a portable subset of ViennaRNA 2.7.2 RNAlib.
+For device with GPU:
+
+```bash
+pip install '.[cuda]'
+```
 
 ## Quick start
 
@@ -118,90 +110,15 @@ original filenames and SHA-256 checksums. There are 35 packaged H5 files in tota
 `models/provenance.json` pins the variant weights to the upstream Git commit and
 records source paths, Git blob hashes and SHA-256 checksums.
 
-## Devices and folding
-
-`device="auto"` selects TensorFlow's first CUDA GPU if TensorFlow was built with
-CUDA and detects a GPU; otherwise it uses CPU. `device="cpu"` always uses CPU.
-`device="cuda"` fails explicitly if CUDA is unavailable. On Linux a compatible
-CUDA TensorFlow environment can be installed with `pip install 'tensorflow[and-cuda]'`.
-Metal plugins are not treated as CUDA devices.
-
-Pip does not detect GPU hardware or choose CUDA dependencies automatically. The
-base install requests `tensorflow`, without its optional CUDA runtime libraries.
-On a supported Linux x86_64 or Windows WSL2 Linux environment with an NVIDIA GPU:
-
-```bash
-pip install 'DeepOneCalculator[cuda]'
-# For this local source checkout:
-pip install '.[cuda]'
-# Verify that TensorFlow detects a GPU:
-python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
-```
-
-The `cuda` extra adds `tensorflow[and-cuda]`, which installs the matching CUDA/cuDNN
-user-space dependencies. It does not install the NVIDIA driver. If compatible
-libraries and a driver already exist, the base TensorFlow install may already
-use the GPU; a separate `tensorflow-gpu` package is unnecessary. macOS has no CUDA
-support, and current TensorFlow CUDA support on Windows requires WSL2. The package's
-C extension currently targets POSIX Linux/macOS. See the
-[official TensorFlow installation guide](https://www.tensorflow.org/install/pip).
-
-
-```python
-from DeepOneCalculator._viennarna import fold_energy
-
-energy = fold_energy("GGGAAACCC")  # kcal/mol, default 37 °C Turner 2004 parameters
-```
-
-The inference feature combines the original RNA/DNA nearest-neighbor energies,
-position weighting, DNA opening and PAM correction with the actual 20 nt spacer
-fold energy. The legacy script accidentally sent individual bases to RNAfold;
-this corrected term can change scores relative to that script. ViennaRNA version
-changes can also affect predictions. All NGN PAM correction factors are preserved
-from the effective upstream dictionary, including duplicate-key overrides such as
-GGG = 1.1 and GGA = 1.1. See [IMPLEMENTATION_NOTES.md](IMPLEMENTATION_NOTES.md).
-
-## Development and validation
-
-```bash
-pip install '.[dev]' ViennaRNA==2.7.2
-ruff check .
-mypy
-pytest
-python -m build
-```
-
-Tests cover real H5 inference across all five cell-line ensembles and both variant ensembles, batching, input validation,
-both-strand discovery, CUDA selection/fallback, packaged checksums, folding and
-concurrent folding calls. The optional ViennaRNA Python package is an independent
-folding reference. CLI comparisons use a separately installed **RNAfold 2.7.2**;
-without it those tests skip. Set `DEEPONE_REQUIRE_RNAFOLD=1` to make absence a failure.
-CI installs the reference CLI, requires these comparisons, runs Ruff/mypy, and
-provides a cibuildwheel workflow for manylinux x86_64 CPython 3.10–3.12 wheels.
-The reference tool is used exclusively in tests.
-
 ## License and citation
 
 The repository is GPL-3.0-only; bundled ViennaRNA retains its upstream license in
 `vendor/viennarna/COPYING`. See the vendor provenance file for the exact source
 archive and modifications.
 
-Original model: [SeqCrafter/DeepOne_model](https://github.com/SeqCrafter/DeepOne_model).
+Original model: [SeqCrafter/DeepOne_model](https://github.com/HaoDK12/DeepOne_model).
 Citation: Hao Yuan, Xiaoguang Pan et al., *Template-free single nucleotide insertion
 with deep-learning CRISPR gRNAs for highly efficient gene disruption and systemic
 correction of DMD mutations*, 2026 (manuscript under revision).
 
-## Standalone repository
 
-This directory is an independent Git repository and can be cloned, built and tested
-without its parent DeepOne repository. All 35 H5 models and the required C sources
-are included here; no imports, symlinks or build paths refer to the parent checkout.
-
-
-The vendored implementation supports only the energy of a single linear RNA using
-fixed default RNAfold settings. It excludes structure traceback, parameter-file
-loading, alternative parameter sets, alignment interfaces, plotting, partition
-function entry points, and other standalone ViennaRNA tools. Shared internal
-allocation, energy evaluation and folding helpers remain as required dependencies.
-The extension exports only its Python initialization symbol; RNAlib internals are
-hidden. No ViennaRNA command-line programs are built or bundled.
