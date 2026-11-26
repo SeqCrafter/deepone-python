@@ -1,5 +1,7 @@
 name: Manylinux wheels
-on: [workflow_dispatch]
+on:
+  workflow_dispatch:
+  workflow_call:
 jobs:
   manylinux:
     runs-on: ubuntu-latest
@@ -10,3 +12,4 @@ jobs:
         with:
           name: manylinux-wheels
           path: wheelhouse/*.whl
+          if-no-files-found: error
