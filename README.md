@@ -75,8 +75,6 @@ guides produce no rows.
 
 If you use this package, please cite:
 
-Hao Yuan, *Xiaoguang Pan*, et al. *Template-free single nucleotide insertion with
-deep-learning CRISPR gRNAs for highly efficient gene disruption and systemic
-correction of DMD mutations*. 2026 (manuscript under revision).
+Hao Yuan, *Xiaoguang Pan*,..,Yonglun Luo et al. *Predicting CRISPR-SpCas9-induced single nucleotide insertion by deep learning*. **Nature Communications**, 2026 (manuscript under revision).
 
 Original model: [DeepOne_model](https://github.com/HaoDK12/DeepOne_model).
