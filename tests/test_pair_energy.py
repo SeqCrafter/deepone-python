@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pytest
 
-from DeepOneCalculator import calculate_free_energy, fold_energy
+from DeepOneCalculator import calculate_crisproff, fold_energy
 from DeepOneCalculator.features import _crisproff_parameters, _dna_opening, _pair_hybrid
 
 GUIDE = "ATGCTAGCTAGCTAGCATGCAGG"
@@ -76,12 +76,12 @@ DEEPONE_SELF = {"self": 18.662363089630304, "self_g2": 16.74247066108159,
 
 @pytest.mark.parametrize(("name", "guide", "target", "core", "crisproff", "deepone"), REFERENCE)
 def test_pairs_match_original_algorithm(name, guide, target, core, crisproff, deepone) -> None:
-    assert calculate_free_energy(guide, target, pam_model="crisproff") == pytest.approx(
+    assert calculate_crisproff(guide, target, pam_model="crisproff") == pytest.approx(
         crisproff, rel=1e-12, abs=1e-12)
-    assert calculate_free_energy(guide, target) == pytest.approx(deepone, rel=1e-12, abs=1e-12)
-    assert calculate_free_energy(guide, target, pam_model="deepone") == pytest.approx(
+    assert calculate_crisproff(guide, target) == pytest.approx(deepone, rel=1e-12, abs=1e-12)
+    assert calculate_crisproff(guide, target, pam_model="deepone") == pytest.approx(
         deepone, rel=1e-12, abs=1e-12)
-    assert isinstance(calculate_free_energy(guide, target), float)
+    assert isinstance(calculate_crisproff(guide, target), float)
 
 
 @pytest.mark.parametrize(("pam", "deepone_value"), [
@@ -93,10 +93,10 @@ def test_crisproff_mode_rejects_other_pams(pam: str, deepone_value: float) -> No
     # The original get_eng multiplies these PAMs by its "OTHERS" 0.0 ratio;
     # this API rejects them instead.
     with pytest.raises(ValueError, match="CRISPRoff"):
-        calculate_free_energy(GUIDE, target, pam_model="crisproff")
+        calculate_crisproff(GUIDE, target, pam_model="crisproff")
     with pytest.raises(ValueError, match="CRISPRoff"):
-        calculate_free_energy(target, target, pam_model="crisproff")
-    assert calculate_free_energy(GUIDE, target) == pytest.approx(deepone_value, rel=1e-12,
+        calculate_crisproff(target, target, pam_model="crisproff")
+    assert calculate_crisproff(GUIDE, target) == pytest.approx(deepone_value, rel=1e-12,
                                                                  abs=1e-12)
 
 
@@ -104,23 +104,23 @@ def test_crisproff_mode_rejects_other_pams(pam: str, deepone_value: float) -> No
                          [entry for entry in REFERENCE if entry[0] in CRISPROFF_SELF])
 def test_self_score_semantics(name, guide, target, core, crisproff, deepone) -> None:
     # Legacy one-argument behavior, exactly.
-    assert calculate_free_energy(guide) == calculate_free_energy(guide, None)
-    assert calculate_free_energy(guide, None) == calculate_free_energy(
+    assert calculate_crisproff(guide) == calculate_crisproff(guide, None)
+    assert calculate_crisproff(guide, None) == calculate_crisproff(
         guide, None, pam_model="deepone")
-    assert calculate_free_energy(guide) == DEEPONE_SELF[name]
+    assert calculate_crisproff(guide) == DEEPONE_SELF[name]
     # 'crisproff' self: the original on-target score; None means target == guide.
-    assert calculate_free_energy(guide, None, pam_model="crisproff") == pytest.approx(
+    assert calculate_crisproff(guide, None, pam_model="crisproff") == pytest.approx(
         crisproff, rel=1e-12, abs=1e-12)
-    assert calculate_free_energy(guide, guide, pam_model="crisproff") == pytest.approx(
+    assert calculate_crisproff(guide, guide, pam_model="crisproff") == pytest.approx(
         crisproff, rel=1e-12, abs=1e-12)
     # An explicit self target in 'deepone' mode uses the mismatch-aware hybrid
     # (per-base weights), not the historical dinucleotide-weighted feature.
-    assert calculate_free_energy(guide, guide) == pytest.approx(deepone, rel=1e-12, abs=1e-12)
+    assert calculate_crisproff(guide, guide) == pytest.approx(deepone, rel=1e-12, abs=1e-12)
 
 
 def test_mismatch_positions_clusters_and_terminal_handling() -> None:
     def value(target: str) -> float:
-        return calculate_free_energy(GUIDE, target, pam_model="crisproff")
+        return calculate_crisproff(GUIDE, target, pam_model="crisproff")
 
     # Terminal mismatches (outside the first-to-last matched base) carry less
     # penalty than internal ones; clusters deepen monotonically.
@@ -132,7 +132,7 @@ def test_mismatch_positions_clusters_and_terminal_handling() -> None:
     # score is exactly folding plus target opening for both cases.
     for target in (ISOLATED, NOMATCH):
         assert _pair_hybrid(GUIDE[:20], target[:20]) == (0.0,) * 20
-        assert calculate_free_energy(GUIDE, target, pam_model="crisproff") == (
+        assert calculate_crisproff(GUIDE, target, pam_model="crisproff") == (
             fold_energy(GUIDE[:20]) + _dna_opening(target[:20]))
 
 
@@ -140,7 +140,7 @@ def test_folding_uses_guide_and_opening_uses_target() -> None:
     target = "ATGCTAGCTCCCTAGCATGCAGG"
     core = 4.911635185697278  # reference value; PAM AGG has ratio 1.0
     assert fold_energy(GUIDE[:20]) != fold_energy(target[:20])
-    value = calculate_free_energy(GUIDE, target, pam_model="crisproff")
+    value = calculate_crisproff(GUIDE, target, pam_model="crisproff")
     assert value == pytest.approx(core, rel=1e-12, abs=1e-12)
     # The original folds the guide spacer (never the off-target), and opens
     # the target DNA (never the guide).
@@ -151,74 +151,74 @@ def test_folding_uses_guide_and_opening_uses_target() -> None:
 
 
 def test_guide_and_target_roles_are_directed() -> None:
-    assert calculate_free_energy(GUIDE, MM9, pam_model="crisproff") == pytest.approx(
+    assert calculate_crisproff(GUIDE, MM9, pam_model="crisproff") == pytest.approx(
         11.06749521344138, rel=1e-12, abs=1e-12)
-    assert calculate_free_energy(MM9, GUIDE, pam_model="crisproff") == pytest.approx(
+    assert calculate_crisproff(MM9, GUIDE, pam_model="crisproff") == pytest.approx(
         11.943630588206144, rel=1e-12, abs=1e-12)
 
 
 def test_lowercase_inputs_are_case_insensitive() -> None:
     for pam_model in ("deepone", "crisproff"):
-        assert calculate_free_energy(
+        assert calculate_crisproff(
             GUIDE.lower(), MM9.lower(), pam_model=pam_model
-        ) == calculate_free_energy(GUIDE, MM9, pam_model=pam_model)
-        assert calculate_free_energy(GUIDE.lower()) == calculate_free_energy(GUIDE)
+        ) == calculate_crisproff(GUIDE, MM9, pam_model=pam_model)
+        assert calculate_crisproff(GUIDE.lower()) == calculate_crisproff(GUIDE)
 
 
 def test_internal_loop_beyond_parameter_range() -> None:
     # The original pipeline aborts with KeyError(12) on a 12 nt internal loop;
     # this API reports it as a ValueError.
     with pytest.raises(ValueError, match="internal loop of 12 nt"):
-        calculate_free_energy(GUIDE, "ATGCCCCGCCCGCCCGATGCAGG", pam_model="crisproff")
+        calculate_crisproff(GUIDE, "ATGCCCCGCCCGCCCGATGCAGG", pam_model="crisproff")
     with pytest.raises(ValueError, match="internal loop of 12 nt"):
-        calculate_free_energy(GUIDE, "ATGCCCCGCCCGCCCGATGCAGG")
+        calculate_crisproff(GUIDE, "ATGCCCCGCCCGCCCGATGCAGG")
 
 
 @pytest.mark.parametrize("target", ["", "A" * 20, "A" * 22, "A" * 24, "N" * 20 + "AGG",
                                     "U" * 20 + "AGG", "ATGCTAGCTAGCTAGCATGCAAA"])
 def test_invalid_off_target(target: str) -> None:
     with pytest.raises(ValueError):
-        calculate_free_energy(GUIDE, target)
+        calculate_crisproff(GUIDE, target)
     with pytest.raises(ValueError):
-        calculate_free_energy(GUIDE, target, pam_model="crisproff")
+        calculate_crisproff(GUIDE, target, pam_model="crisproff")
 
 
 @pytest.mark.parametrize("target", [23, 1.0, ["A" * 23]])
 def test_invalid_off_target_type(target: object) -> None:
     with pytest.raises(TypeError):
-        calculate_free_energy(GUIDE, target)  # type: ignore[arg-type]
+        calculate_crisproff(GUIDE, target)  # type: ignore[arg-type]
 
 
 @pytest.mark.parametrize("pam_model", [None, 5, "off"])
 def test_invalid_pam_model(pam_model: object) -> None:
     if pam_model is None or isinstance(pam_model, int):
         with pytest.raises(TypeError):
-            calculate_free_energy(GUIDE, MM9, pam_model=pam_model)  # type: ignore[arg-type]
+            calculate_crisproff(GUIDE, MM9, pam_model=pam_model)  # type: ignore[arg-type]
     else:
         with pytest.raises(ValueError, match="pam_model"):
-            calculate_free_energy(GUIDE, MM9, pam_model=pam_model)  # type: ignore[arg-type]
+            calculate_crisproff(GUIDE, MM9, pam_model=pam_model)  # type: ignore[arg-type]
 
 
 def test_pam_validation_uses_target_and_mode() -> None:
     # Target PAM outside the selected table.
     with pytest.raises(ValueError, match="DeepOne"):
-        calculate_free_energy(GUIDE, "ATGCTAGCTAGCTAGCATGCAAA")
+        calculate_crisproff(GUIDE, "ATGCTAGCTAGCTAGCATGCAAA")
     with pytest.raises(ValueError, match="CRISPRoff"):
-        calculate_free_energy(GUIDE, "ATGCTAGCTAGCTAGCATGCAAA", pam_model="crisproff")
+        calculate_crisproff(GUIDE, "ATGCTAGCTAGCTAGCATGCAAA", pam_model="crisproff")
     # Self PAM (None target) is validated against the selected table as well.
     ngc_guide = "ATGCTAGCTAGCTAGCATGCGGC"
-    assert calculate_free_energy(ngc_guide)  # NGC is scored by DeepOne
+    assert calculate_crisproff(ngc_guide)  # NGC is scored by DeepOne
     with pytest.raises(ValueError, match="CRISPRoff"):
-        calculate_free_energy(ngc_guide, None, pam_model="crisproff")
+        calculate_crisproff(ngc_guide, None, pam_model="crisproff")
 
 
 def test_legacy_one_argument_calls_unchanged() -> None:
     reference = json.loads(Path(__file__).with_name("variant_reference.json").read_text())
     for context, energy in zip(reference["contexts"][:8], reference["energies"][:8], strict=True):
         guide = context[4:27]
-        assert calculate_free_energy(guide) == pytest.approx(energy, rel=1e-7, abs=1e-7)
-        assert calculate_free_energy(guide) == calculate_free_energy(guide, None)
-        assert calculate_free_energy(guide, None) == calculate_free_energy(
+        assert calculate_crisproff(guide) == pytest.approx(energy, rel=1e-7, abs=1e-7)
+        assert calculate_crisproff(guide) == calculate_crisproff(guide, None)
+        assert calculate_crisproff(guide, None) == calculate_crisproff(
             guide, None, pam_model="deepone")
 
 

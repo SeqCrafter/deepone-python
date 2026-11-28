@@ -1,15 +1,15 @@
 """DeepOne inference with packaged pretrained models and RNA folding."""
 
 from ._viennarna import fold_energy
-from .api import score_grnas
+from .api import calculate_deepone
 from .crispron import calculate_crispron
-from .features import calculate_free_energy
+from .features import calculate_crisproff
 from .resources import SUPPORTED_CAS9_TYPES, SUPPORTED_CELL_LINES
 from .specificity import CRISPRspecConfig, ReferenceGenome, calculate_crisprspec
 
 __all__ = [
     "SUPPORTED_CAS9_TYPES", "SUPPORTED_CELL_LINES", "CRISPRspecConfig", "ReferenceGenome",
-    "calculate_crispron", "calculate_crisprspec", "calculate_free_energy", "fold_energy",
-    "score_grnas",
+    "calculate_deepone", "calculate_crispron", "calculate_crisprspec", "calculate_crisproff",
+    "fold_energy",
 ]
 __version__ = "0.2.0"

@@ -15,7 +15,7 @@ from types import ModuleType
 import pytest
 
 from DeepOneCalculator import CRISPRspecConfig, ReferenceGenome, calculate_crisprspec
-from DeepOneCalculator.features import calculate_free_energy
+from DeepOneCalculator.features import calculate_crisproff
 from DeepOneCalculator.specificity import _candidate_counts, _read_fasta
 
 pl = pytest.importorskip("polars")
@@ -74,10 +74,10 @@ def reference_score(guide: str, counts: Counter[str], config: CRISPRspecConfig) 
         counts[guide] -= 1
     beta = 1.0 / (0.001987 * config.temperature_kelvin)
     off = sum(
-        count * math.exp(beta * calculate_free_energy(guide, target, pam_model=config.pam_model))
+        count * math.exp(beta * calculate_crisproff(guide, target, pam_model=config.pam_model))
         for target, count in counts.items() if count
     )
-    on = math.exp(beta * calculate_free_energy(guide, pam_model=config.pam_model))
+    on = math.exp(beta * calculate_crisproff(guide, pam_model=config.pam_model))
     return -math.log10(off / (off + on)) if off else math.inf
 
 
@@ -376,8 +376,8 @@ def test_same_span_opposite_strands_and_first_pam_base(tmp_path: Path) -> None:
     })
     config = CRISPRspecConfig(max_mismatches=0, temperature_kelvin=298.15, pam_model="deepone")
     beta = 1.0 / (0.001987 * config.temperature_kelvin)
-    on = math.exp(beta * calculate_free_energy(guide))
-    off = on + math.exp(beta * calculate_free_energy(guide, other_pam))
+    on = math.exp(beta * calculate_crisproff(guide))
+    off = on + math.exp(beta * calculate_crisproff(guide, other_pam))
     assert calculate_crisprspec(guide, fasta, config=config) == pytest.approx(
         -math.log10(off / (on + off)), abs=1e-12,
     )
@@ -392,7 +392,7 @@ def test_log_domain_avoids_exponent_overflow(
     def energy(guide: str, target: str | None = None, **kwargs: object) -> float:
         return off_energy if target is not None else 0.0
 
-    monkeypatch.setattr("DeepOneCalculator.specificity.calculate_free_energy", energy)
+    monkeypatch.setattr("DeepOneCalculator.specificity.calculate_crisproff", energy)
     score = calculate_crisprspec(GUIDE, fasta)
     assert math.isfinite(score)
     if off_energy < 0:
@@ -404,8 +404,8 @@ def test_log_domain_avoids_exponent_overflow(
 def test_energy_import_does_not_load_optional_dependencies() -> None:
     result = subprocess.run([
         sys.executable, "-c",
-        "import sys; from DeepOneCalculator import calculate_free_energy; "
-        "calculate_free_energy('AT' * 10 + 'AGG'); "
+        "import sys; from DeepOneCalculator import calculate_crisproff; "
+        "calculate_crisproff('AT' * 10 + 'AGG'); "
         "assert not {'risearch', 'polars', 'tensorflow'} & sys.modules.keys()",
     ], capture_output=True, text=True)
     assert result.returncode == 0, result.stderr

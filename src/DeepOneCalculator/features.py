@@ -211,13 +211,16 @@ def _pair_energy(guide: str, target: str, ratio: float) -> float:
     return off * ratio
 
 
-def calculate_free_energy(
+def calculate_crisproff(
     grna_seq: str,
     off_target_seq: str | None = None,
     *,
     pam_model: Literal["deepone", "crisproff"] = "deepone",
 ) -> float:
-    """Calculate the thermodynamic feature of a guide against a target site.
+    """Calculate the CRISPRoff weighted energy score of a guide against a target site.
+
+    The default PAM correction remains ``'deepone'``; select
+    ``pam_model='crisproff'`` for the original CRISPRoff PAM corrections.
 
     Parameters
     ----------
@@ -273,14 +276,14 @@ def calculate_free_energy(
     explicit off-target, both modes share the mismatch-aware CRISPRoff
     hybrid (the DeepOne table has no mismatch parameters); only the PAM
     correction table differs.  PAM correction factors for NAG exist in the
-    upstream feature table even though score_grnas scans only NGG (SpCas9)
+    upstream feature table even though calculate_deepone scans only NGG (SpCas9)
     or NGN (the two variants).  Use fold_energy for RNA secondary-structure
     minimum free energy alone.  TensorFlow, H5 weights and a GPU are not
     required for this calculation.
 
     Examples
     --------
-    >>> isinstance(calculate_free_energy("AT" * 10 + "AGG"), float)
+    >>> isinstance(calculate_crisproff("AT" * 10 + "AGG"), float)
     True
     """
     if not isinstance(grna_seq, str):

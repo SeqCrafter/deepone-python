@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from DeepOneCalculator import SUPPORTED_CELL_LINES, score_grnas
+from DeepOneCalculator import SUPPORTED_CELL_LINES, calculate_deepone
 from DeepOneCalculator.features import _encode, _energy
 from DeepOneCalculator.inference import _predict
 from DeepOneCalculator.resources import _manifest
@@ -28,12 +28,12 @@ def test_packaged_weights() -> None:
 
 @pytest.mark.integration
 def test_real_ensembles() -> None:
-    scores = score_grnas(TARGETS, "all", batch_size=2, device="cpu")
+    scores = calculate_deepone(TARGETS, "all", batch_size=2, device="cpu")
     assert set(scores.cell_line) == set(SUPPORTED_CELL_LINES)
     assert scores.groupby("cell_line").size().nunique() == 1
     assert set(scores.sequence_id) == {"sequence_1", "sequence_2"}
     assert np.isfinite(scores.deepone_score).all()
-    repeated = score_grnas(TARGETS, "K562", batch_size=1, device="cpu")
+    repeated = calculate_deepone(TARGETS, "K562", batch_size=1, device="cpu")
     np.testing.assert_allclose(scores.loc[scores.cell_line == "K562", "deepone_score"],
                                repeated.deepone_score, rtol=1e-5, atol=1e-5)
 

@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from DeepOneCalculator import SUPPORTED_CAS9_TYPES, score_grnas
+from DeepOneCalculator import SUPPORTED_CAS9_TYPES, calculate_deepone
 from DeepOneCalculator.features import _encode, _energy, _find_guides
 from DeepOneCalculator.inference import _predict
 from DeepOneCalculator.resources import _normalize_cas9_types
@@ -25,7 +25,7 @@ def test_variant_names() -> None:
 @pytest.mark.parametrize("value", [[], "SpRY", ["all", "SpG"], [42], None])
 def test_invalid_variant_selection(value: object) -> None:
     with pytest.raises(ValueError, match="cas9_types|Cas9 type"):
-        score_grnas(NGG, cas9_types=value)  # type: ignore[arg-type]
+        calculate_deepone(NGG, cas9_types=value)  # type: ignore[arg-type]
 
 
 @pytest.mark.parametrize("pam", ["".join(b) for b in itertools.product("ATCG", repeat=3)])
@@ -47,7 +47,7 @@ def test_input_order_duplicates_and_variant_model_scope() -> None:
     with patch("DeepOneCalculator.api._predict",
                side_effect=lambda x, *args: np.arange(len(x))) as predict, \
          patch("DeepOneCalculator.api._resolve_device", return_value="/CPU:0"):
-        result = score_grnas(sequences, ["K562", "HEK293"],
+        result = calculate_deepone(sequences, ["K562", "HEK293"],
                              cas9_types=["SpG", "SpCas9", "SpCas9_NG", "SpG"])
     expected_ids = [f"sequence_{index}" for index in range(1, 13)]
     assert result.sequence_id.tolist() == expected_ids * 4
@@ -66,7 +66,7 @@ def test_ngn_only_rows_and_missing_input_ids() -> None:
     with patch("DeepOneCalculator.api._predict",
                side_effect=lambda x, *args: np.zeros(len(x))) as predict, \
          patch("DeepOneCalculator.api._resolve_device", return_value="/CPU:0"):
-        result = score_grnas(["A" * 30, NGN], cas9_types="all")
+        result = calculate_deepone(["A" * 30, NGN], cas9_types="all")
     assert result.sequence_id.tolist() == ["sequence_2", "sequence_2"]
     assert result.cas9_type.tolist() == ["SpCas9-NG", "SpG"]
     assert result.cell_line.isna().all()
@@ -86,13 +86,13 @@ def test_variant_reference_features_and_predictions() -> None:
 
 @pytest.mark.integration
 def test_real_variant_api_and_batching() -> None:
-    result = score_grnas([NGG, NGN], ["HEK293", "K562"], cas9_types="all", device="cpu",
+    result = calculate_deepone([NGG, NGN], ["HEK293", "K562"], cas9_types="all", device="cpu",
                          batch_size=1)
     assert len(result) == 6
     assert np.isfinite(result.deepone_score).all()
     assert result.cas9_type.tolist() == ["SpCas9", "SpCas9", "SpCas9-NG", "SpCas9-NG",
                                         "SpG", "SpG"]
-    variants = score_grnas([NGG, NGN], "iPSC", cas9_types=["SpCas9-NG", "SpG"],
+    variants = calculate_deepone([NGG, NGN], "iPSC", cas9_types=["SpCas9-NG", "SpG"],
                            device="cpu", batch_size=256)
     pd.testing.assert_frame_equal(
         result.loc[result.cas9_type != "SpCas9"].reset_index(drop=True), variants,

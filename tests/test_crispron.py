@@ -9,7 +9,7 @@ import pytest
 
 from DeepOneCalculator import calculate_crispron
 from DeepOneCalculator.crispron import _build_model, _encode, _manifest, _predict
-from DeepOneCalculator.features import _find_guides, calculate_free_energy
+from DeepOneCalculator.features import _find_guides, calculate_crisproff
 
 TARGET = "AAAA" + "ATATATATATATATATATAT" + "AGG" + "AAA"
 COLUMNS = ["sequence_id", "sequence", "gRNA_id", "gRNA_seq", "crispron_score"]
@@ -41,9 +41,9 @@ def test_encoding_and_features() -> None:
     assert energies.shape == (4, 1)
     assert energies.dtype == np.float32
     assert device == "/CPU:0" and batch_size == 2
-    expected = calculate_free_energy(TARGET[4:27], pam_model="crisproff")
+    expected = calculate_crisproff(TARGET[4:27], pam_model="crisproff")
     np.testing.assert_allclose(energies, expected)
-    assert not np.isclose(calculate_free_energy(contexts[2][4:27]), expected)
+    assert not np.isclose(calculate_crisproff(contexts[2][4:27]), expected)
 
 
 def test_reverse_and_multiple_windows() -> None:
@@ -120,7 +120,7 @@ def test_original_models_and_ensemble() -> None:
     for batch_size in (1, 256):
         np.testing.assert_allclose(_predict(encoded, energies, "/CPU:0", batch_size),
                                    expected_mean, rtol=1e-5, atol=1e-5)
-    computed = [calculate_free_energy(c[4:27], pam_model="crisproff")
+    computed = [calculate_crisproff(c[4:27], pam_model="crisproff")
                 for c in reference["contexts"]]
     np.testing.assert_allclose(computed, reference["energies"], rtol=1e-6, atol=1e-5)
 

@@ -11,7 +11,7 @@ _COLUMNS = ["sequence_id", "sequence", "gRNA_id", "gRNA_seq", "cell_line", "cas9
             "deepone_score"]
 
 
-def score_grnas(
+def calculate_deepone(
     sequences: list[str] | str,
     cell_lines: list[str] | str = "all",
     batch_size: int = 256,

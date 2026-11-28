@@ -3,7 +3,7 @@ from unittest.mock import patch
 import numpy as np
 import pytest
 
-from DeepOneCalculator import SUPPORTED_CELL_LINES, score_grnas
+from DeepOneCalculator import SUPPORTED_CELL_LINES, calculate_deepone
 from DeepOneCalculator.features import _encode, _find_guides
 from DeepOneCalculator.inference import _resolve_device
 
@@ -17,7 +17,7 @@ def test_shapes(sequences: str | list[str], cells: str | list[str]) -> None:
     ncell = 5 if cells == "all" else 1 if isinstance(cells, str) else len(cells)
     with patch("DeepOneCalculator.api._predict", side_effect=lambda x, *args: np.arange(len(x))), \
          patch("DeepOneCalculator.api._resolve_device", return_value="/CPU:0"):
-        frame = score_grnas(sequences, cells, batch_size=1)
+        frame = calculate_deepone(sequences, cells, batch_size=1)
     assert len(frame) == count * ncell
     assert list(frame.columns) == ["sequence_id", "sequence", "gRNA_id", "gRNA_seq",
                                    "cell_line", "cas9_type", "deepone_score"]
@@ -41,7 +41,7 @@ def test_reverse_complement_and_window_edges() -> None:
 @pytest.mark.parametrize("sequences", ["A" * 29, "N" * 30, " " * 30, [TARGET, 2], None])
 def test_bad_sequences(sequences: object) -> None:
     with pytest.raises(ValueError):
-        score_grnas(sequences)  # type: ignore[arg-type]
+        calculate_deepone(sequences)  # type: ignore[arg-type]
 
 
 @pytest.mark.parametrize("kwargs", [
@@ -51,12 +51,12 @@ def test_bad_sequences(sequences: object) -> None:
 ])
 def test_bad_options(kwargs: dict) -> None:
     with pytest.raises(ValueError):
-        score_grnas(TARGET, **kwargs)
+        calculate_deepone(TARGET, **kwargs)
 
 
 def test_empty_and_no_pam() -> None:
     for sequences in ([], "A" * 30):
-        result = score_grnas(sequences)
+        result = calculate_deepone(sequences)
         assert result.empty
         assert len(result.columns) == 7
         assert result.deepone_score.dtype == np.float64

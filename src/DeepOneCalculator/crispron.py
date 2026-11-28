@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 from numpy.typing import NDArray
 
-from .features import _find_guides, calculate_free_energy
+from .features import _find_guides, calculate_crisproff
 from .inference import Device, _resolve_device
 
 _COLUMNS = ["sequence_id", "sequence", "gRNA_id", "gRNA_seq", "crispron_score"]
@@ -106,7 +106,7 @@ def calculate_crispron(
     resolved = _resolve_device(device)
     encoded = _encode([guide.context for guide in guides])
     energies = np.array([
-        [calculate_free_energy(guide.grna_seq, pam_model="crisproff")] for guide in guides
+        [calculate_crisproff(guide.grna_seq, pam_model="crisproff")] for guide in guides
     ], dtype=np.float32)
     predictions = _predict(encoded, energies, resolved, batch_size)
     scores: pd.DataFrame = pd.DataFrame([

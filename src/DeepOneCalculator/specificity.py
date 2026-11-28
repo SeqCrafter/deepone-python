@@ -19,7 +19,7 @@ from typing import TYPE_CHECKING, Literal
 
 import numpy as np
 
-from .features import calculate_free_energy
+from .features import calculate_crisproff
 
 if TYPE_CHECKING:
     import polars as pl
@@ -310,7 +310,7 @@ def calculate_crisprspec(
     Search uses a full-length, non-wobble seed with no extension and a
     permissive energy cutoff. Candidates remain in a Polars DataFrame;
     RIsearch energies are ignored and guide-target pairs are rescored with
-    :func:`calculate_free_energy`. No interaction TSV/gzip files are written
+    :func:`calculate_crisproff`. No interaction TSV/gzip files are written
     or parsed. The current RIsearch API still needs one tiny query FASTA.
 
     Returns ``-log10(Z_off / (Z_off + Z_on))`` as a float, evaluated in the
@@ -330,7 +330,7 @@ def calculate_crisprspec(
         config = CRISPRspecConfig()
     elif not isinstance(config, CRISPRspecConfig):
         raise TypeError("config must be a CRISPRspecConfig")
-    on_energy = calculate_free_energy(grna_seq, pam_model=config.pam_model)
+    on_energy = calculate_crisproff(grna_seq, pam_model=config.pam_model)
     guide = grna_seq.upper()
     if guide[-2:] not in config.pam_suffixes:
         raise ValueError("The guide PAM must be included in pam_suffixes")
@@ -366,7 +366,7 @@ def calculate_crisprspec(
     beta = 1.0 / (0.001987 * config.temperature_kelvin)
     log_weights = np.fromiter(
         (math.log(count) + beta * (
-            calculate_free_energy(guide, target, pam_model=config.pam_model) - on_energy
+            calculate_crisproff(guide, target, pam_model=config.pam_model) - on_energy
         ) for target, count in counts.items()), dtype=np.float64,
     )
     log_ratio = np.logaddexp.reduce(log_weights, keepdims=True)[0]
