@@ -1,5 +1,10 @@
 # DeepOneCalculator
 
+[![Test](https://github.com/SeqCrafter/deepone-python/actions/workflows/ci.yml/badge.svg)](https://github.com/SeqCrafter/deepone-python/actions/workflows/ci.yml)
+[![Manylinux wheels](https://github.com/SeqCrafter/deepone-python/actions/workflows/wheels.yml/badge.svg)](https://github.com/SeqCrafter/deepone-python/actions/workflows/wheels.yml)
+[![Publish to PyPI](https://github.com/SeqCrafter/deepone-python/actions/workflows/publish.yml/badge.svg)](https://github.com/SeqCrafter/deepone-python/actions/workflows/publish.yml)
+![PyPI Version](https://img.shields.io/pypi/v/DeepOneCalculator)
+
 ## Installation
 
 Python 3.10 or later is required. Installations with RIsearch require Python 3.11
