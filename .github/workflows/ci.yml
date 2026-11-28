@@ -29,6 +29,9 @@ jobs:
           python -m build
           python -m pip install dist/*.whl
           python -m pip install pytest ruff mypy pandas-stubs
+          if [ "${{ matrix.python }}" != "3.10" ]; then
+            python -m pip install "DeepOneCalculator[specificity]"
+          fi
           ruff check .
           mypy
           pytest

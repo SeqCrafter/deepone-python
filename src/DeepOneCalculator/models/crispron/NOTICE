@@ -1,0 +1,21 @@
+CRISPRon
+Copyright (c) 2021 by the contributors (see AUTHORS).
+SPDX-License-Identifier: AGPL-3.0-or-later
+
+来源：https://rth.dk/resources/crispr/crispron/
+论文：Xiang X, Corsi GI, Anthon C, et al. Enhancing CRISPR-Cas9 gRNA
+ efficiency prediction by data integration and deep learning.
+ Nature Communications 12, 3238 (2021).
+ https://doi.org/10.1038/s41467-021-23576-0
+
+修改日期：2026-11-27。
+本目录包含从上游六套 SavedModel 提取的纯推理权重，数值未重新训练或调整。
+训练状态、优化器状态和可执行序列化计算图未分发。
+网络在 DeepOneCalculator/crispron.py 中显式重建，编码顺序为 A/C/G/T，
+CRISPRoff 能量作为原始标量输入。原文件及转换权重的 SHA256、映射与验证环境
+记录于 provenance.json 和 manifest.json。
+
+CRISPRon 组件采用 GNU Affero General Public License v3 或更新版本，见
+LICENSE 和 COPYING。包内其他组件保留其原许可证；GPLv3 与 AGPLv3
+组合分发及网络使用须遵循相应条款，包括适用的对应源代码提供义务。
+本软件按原样提供，不提供任何担保。

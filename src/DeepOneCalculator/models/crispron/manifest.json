@@ -1,0 +1,26 @@
+[
+  {
+    "file": "1.weights.h5",
+    "sha256": "accc2144f0544bcb6adc8d7567f3387f8ff8b19448ed7067a36bedf9ef44d299"
+  },
+  {
+    "file": "2.weights.h5",
+    "sha256": "8d6d975a9107eed38bafc7cd8f39974de23e351743cda16ea286119089346489"
+  },
+  {
+    "file": "3.weights.h5",
+    "sha256": "0bafd5016235f3b66e63e1b58148727d7758e2a1bf294989103e26dd06bcecea"
+  },
+  {
+    "file": "4.weights.h5",
+    "sha256": "5ddd2a3e8a38ed85345f4308b71ad6ad00310ee9b60f4e2d2dda68647bc3ca52"
+  },
+  {
+    "file": "5.weights.h5",
+    "sha256": "3631ed96974d3364431f6771f2e7fa0b64b992d90d17a5d10c8abbc049690e9d"
+  },
+  {
+    "file": "6.weights.h5",
+    "sha256": "c4cba5cb752d5038347f7e5b03057765bc3daf644af4f042909d75128d7a8fc0"
+  }
+]

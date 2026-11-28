@@ -8,28 +8,34 @@ version = "1.0.0"
 description = "Pretrained DeepOne SpCas9, SpCas9-NG and SpG insertion predictions"
 readme = "README.md"
 requires-python = ">=3.10"
-license = "GPL-3.0-only"
-license-files = ["LICENSE", "vendor/viennarna/COPYING"]
+license = "GPL-3.0-only AND AGPL-3.0-or-later"
+license-files = ["LICENSE", "vendor/viennarna/COPYING", "src/DeepOneCalculator/models/crispron/LICENSE", "src/DeepOneCalculator/models/crispron/COPYING", "src/DeepOneCalculator/models/crispron/AUTHORS", "src/DeepOneCalculator/models/crispron/NOTICE"]
 dependencies = ["numpy>=1.26", "pandas>=2.1", "tensorflow>=2.16,<2.22", "h5py>=3.10"]
 
 [project.optional-dependencies]
 cuda = ["tensorflow[and-cuda]>=2.16,<2.22"]
+specificity = ["risearch==3.0.0a5"]
 dev = ["pytest>=8", "ruff>=0.9", "mypy>=1.14", "pandas-stubs", "build"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-DeepOneCalculator = ["models/*.h5", "models/*.json", "*.json", "py.typed", "*.pyi"]
+DeepOneCalculator = ["models/*.h5", "models/*.json", "models/crispron/*", "*.json", "py.typed", "*.pyi"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-markers = ["integration: real pretrained model inference", "cli: reference RNAfold comparison"]
+markers = [
+    "integration: real pretrained model inference",
+    "cli: reference RNAfold comparison",
+    "specificity: requires the optional RIsearch Python bindings",
+]
 
 [tool.ruff]
 target-version = "py310"
 line-length = 100
 include = ["src/**/*.py", "tests/**/*.py", "setup.py"]
+extend-exclude = ["risearch"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
@@ -40,7 +46,7 @@ files = ["src/DeepOneCalculator"]
 strict = true
 
 [[tool.mypy.overrides]]
-module = ["tensorflow.*", "h5py.*"]
+module = ["tensorflow.*", "h5py.*", "polars.*"]
 ignore_missing_imports = true
 
 [tool.cibuildwheel]
